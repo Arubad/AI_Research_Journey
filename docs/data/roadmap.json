@@ -1,0 +1,2438 @@
+{
+  "meta": {
+    "title": "AI Lab Research Roadmap — Merged Master Plan",
+    "date": "Oct 27, 2026",
+    "author": "@Arush",
+    "intro": [
+      "This plan merges three sources into one sequence: your 21-paper \"Break the Equation\" curriculum (Modules 1–8), the [alisa-roadmap](https://github.com/soasme/alisa-roadmap) GitHub knowledge map, and the blog it was compiled from, [Alisa Liu's Notes on the Industry Job Search](https://alisawuffles.github.io/blog/job-search/) (Research Scientist at OpenAI; 57 interviews, 11 companies, 4 offers). Her central finding sets the priority order here: technical skill and implementation fluency are evaluated far more than research experience, and research experience is mostly what gets you the first interview.",
+      "**The by-hand vs coding-agent rule.** Labs now expect you to use agents for real work, but interviews are run with AI off. So every item below carries one of three tags."
+    ],
+    "tags": [
+      {
+        "tag": "HAND",
+        "meaning": "Muscle memory. Write it from a blank file with AI off, under a time target, repeatedly.",
+        "rule": "Anything that fits in 15–60 lines and shows up in ML-coding rounds: attention, a decoder block, BPE, sampling, a training loop, NumPy backprop, Adam, LoRA, RoPE, a KV cache, the DPO/GRPO loss."
+      },
+      {
+        "tag": "HAND→AGENT",
+        "meaning": "Write the core once by hand so you own it, then hand the variations, sweeps, plots and scaffolding to a coding agent.",
+        "rule": "The \"break it\" experiments: you write the 10-line change that breaks the equation; the agent builds the harness, dataset loader, logging and plots around it."
+      },
+      {
+        "tag": "AGENT",
+        "meaning": "Delegate the build; your job is to specify it, read every line, run it, and be able to explain any design choice in it.",
+        "rule": "Triton kernels, distributed training scaffolding, full RLHF loops with TRL, MoE training infra, diffusion samplers, anything that is in a project on your CV but would never be asked as a 30-minute whiteboard."
+      }
+    ],
+    "afterTags": [
+      "The test for a CV project is simple: if an interviewer opens any file in it and asks \"why is this here?\", you answer without hesitation. Being able to reproduce the whole file by hand is not required; being able to reproduce the boilerplate core (the model, the loss, the loop) is.",
+      "**Reading order.** Phases run roughly in sequence but overlap on purpose: LeetCode (Phase 5) is a daily 30-minute habit from week 3 onward, and the paper curriculum (Phase 3) is the spine that the CS336 lectures and the muscle-memory drills hang off. Every section links its sources inline; the full index is at the end."
+    ]
+  },
+  "interviews": {
+    "title": "What AI-lab interviews actually test",
+    "intro": "ML coding is the single most common round, and \"implement a Transformer / decoding strategy / classic ML algorithm from scratch in PyTorch\" is its modal question. Everything else in this roadmap is weighted by the table below, which is Alisa's own breakdown (approximate shares from the GitHub map).",
+    "rounds": [
+      {
+        "round": "ML coding",
+        "share": "~50%",
+        "testing": "Can you implement what you claim to know, fluently, with AI off? PyTorch is a must; NumPy only for backward passes.",
+        "passing": "Decoder block with causal masking from a blank file; beam search or top-p sampling clean on first run.",
+        "where": "Phase 2 (drills), Phase 3 (papers)"
+      },
+      {
+        "round": "Technical discussion",
+        "share": "~20%",
+        "testing": "Two flavors: (a) design an experiment to answer a research question and defend it under pushback; (b) rapid-fire breadth (\"What is 5D parallelism? PPO vs GRPO? Ways to encode position?\").",
+        "passing": "Crisp, opinionated answers; you can name trade-offs without notes.",
+        "where": "Phase 0, Phase 4, Phase 6"
+      },
+      {
+        "round": "General coding",
+        "share": "~20%",
+        "testing": "LeetCode-style, sometimes with ML flavor; the patterns leak into ML coding rounds.",
+        "passing": "Mediums consistently under 25 minutes.",
+        "where": "Phase 5"
+      },
+      {
+        "round": "Behavioral",
+        "share": "~10%",
+        "testing": "Specific stories mapped to leadership / conflict / failure / impact, plus a serious question on AI safety.",
+        "passing": "STAR answers retrieved instantly, no reconstruction.",
+        "where": "Phase 6"
+      },
+      {
+        "round": "Math (some companies)",
+        "share": "varies",
+        "testing": "Pen-and-paper derivations: MLE = cross-entropy, KL both directions, backprop, Adam bias correction, SVD/low-rank.",
+        "passing": "You derive, not recall.",
+        "where": "Phase 1"
+      },
+      {
+        "round": "Research discussion + job talk",
+        "share": "varies",
+        "testing": "Why you chose the problems you did; what you'd do with 10x compute; the company's recent papers.",
+        "passing": "80% of the talk on first-author work; every baseline choice defensible.",
+        "where": "Phase 6"
+      }
+    ],
+    "after": "Two practical notes from the blog that shape the schedule: each interview is \"a class you never attended with three days to cram,\" so keep swappable per-topic notes (she kept a [running LLM notebook](https://alisawuffles.notion.site/alisa-s-book-of-llms) and a [math notebook](https://alisawuffles.notion.site/math-notes)); and sleep beats last-minute cramming — her first technical interview was lost to an off-by-one error on two hours of sleep.",
+    "sources": "[alisa-roadmap README](https://github.com/soasme/alisa-roadmap) · [Notes on the Industry Job Search](https://alisawuffles.github.io/blog/job-search/)"
+  },
+  "phases": [
+    {
+      "id": "p0",
+      "nav": "CS336 breadth",
+      "num": 0,
+      "title": "Breadth first — Stanford CS336",
+      "weeks": "weeks 1–2",
+      "intro": [
+        "Watch all 17 lectures of [Stanford CS336: Language Modeling from Scratch](https://cs336.stanford.edu/spring2025/) ([YouTube playlist](https://www.youtube.com/playlist?list=PLoROMvodv4rOY23Y0BoGoBGgQ1zmU_MT_)) before any deep dive. Alisa started her search this way; it gives the skeleton that organizes every scattered concept, and its five assignments are the best self-study implementation track that exists. Watch at 1.5x, take notes, draw one diagram per lecture. Do not pause to implement yet."
+      ],
+      "playlist": {
+        "title": "Stanford CS336: Language Modeling from Scratch",
+        "list": "PLoROMvodv4rOY23Y0BoGoBGgQ1zmU_MT_"
+      },
+      "lectures": [
+        {
+          "id": "L1",
+          "n": "1",
+          "topic": "Overview, tokenization",
+          "why": "BPE appears in almost every ML-coding round",
+          "papers": "— (Phase 4 tokenization)",
+          "assignment": "A1 Basics out",
+          "links": [
+            {
+              "label": "Lecture 1",
+              "url": "http://cs336.stanford.edu/spring2025-lectures/?trace=var/traces/lecture_01.json"
+            }
+          ]
+        },
+        {
+          "id": "L2",
+          "n": "2",
+          "topic": "PyTorch, resource accounting",
+          "why": "Memory math (params, activations, KV) comes up constantly",
+          "papers": "#12 Chinchilla, #17 FlashAttention",
+          "assignment": "A1",
+          "links": [
+            {
+              "label": "Lecture 2",
+              "url": "http://cs336.stanford.edu/spring2025-lectures/?trace=var/traces/lecture_02.json"
+            }
+          ]
+        },
+        {
+          "id": "L3",
+          "n": "3",
+          "topic": "Architectures, hyperparameters",
+          "why": "Backbone of every architecture question: pre-norm, RMSNorm, SwiGLU, RoPE",
+          "papers": "#4 Transformer, #16 LLaMA",
+          "assignment": "A1",
+          "links": [
+            {
+              "label": "Lecture 3",
+              "url": "https://github.com/stanford-cs336/spring2025-lectures/blob/e9cb2488fdb53ea37f0e38924ec3a1701925cef3/nonexecutable/2025%20Lecture%203%20-%20architecture.pdf"
+            }
+          ]
+        },
+        {
+          "id": "L4",
+          "n": "4",
+          "topic": "Mixture of experts",
+          "why": "Expect \"implement a top-k router\" asks",
+          "papers": "#18 Switch / DeepSeek-V3",
+          "assignment": "—",
+          "links": [
+            {
+              "label": "Lecture 4",
+              "url": "https://github.com/stanford-cs336/spring2025-lectures/blob/98455ec198c9a88ec1ab2b1c4058662431b54ce3/nonexecutable/2025%20Lecture%204%20-%20MoEs.pdf"
+            }
+          ]
+        },
+        {
+          "id": "L5",
+          "n": "5",
+          "topic": "GPUs",
+          "why": "Arithmetic intensity, memory- vs compute-bound",
+          "papers": "#17 FlashAttention",
+          "assignment": "A2 Systems out",
+          "links": [
+            {
+              "label": "Lecture 5",
+              "url": "https://github.com/stanford-cs336/spring2025-lectures/blob/main/nonexecutable/2025%20Lecture%205%20-%20GPUs.pdf"
+            }
+          ]
+        },
+        {
+          "id": "L6",
+          "n": "6",
+          "topic": "Kernels, Triton",
+          "why": "Required at infra-heavy labs",
+          "papers": "#17 FlashAttention",
+          "assignment": "A2",
+          "links": [
+            {
+              "label": "Lecture 6",
+              "url": "http://cs336.stanford.edu/spring2025-lectures/?trace=var/traces/lecture_06.json"
+            }
+          ]
+        },
+        {
+          "id": "L7",
+          "n": "7",
+          "topic": "Parallelism basics",
+          "why": "\"Train a 70B model on 8x80GB — walk me through it\"",
+          "papers": "#16 Llama 3",
+          "assignment": "A2",
+          "links": [
+            {
+              "label": "Lecture 7",
+              "url": "https://github.com/stanford-cs336/spring2025-lectures/blob/4eff81bee0a853217209e163936b264f03572b66/nonexecutable/2025%20Lecture%207%20-%20Parallelism%20basics.pdf"
+            }
+          ]
+        },
+        {
+          "id": "L8",
+          "n": "8",
+          "topic": "Parallelism (Percy)",
+          "why": "Same question, deeper: ZeRO stages, TP/PP/DP trade-offs",
+          "papers": "— (Phase 4)",
+          "assignment": "A2",
+          "links": [
+            {
+              "label": "Lecture 8",
+              "url": "http://cs336.stanford.edu/spring2025-lectures/?trace=var/traces/lecture_08.json"
+            }
+          ]
+        },
+        {
+          "id": "L9",
+          "n": "9",
+          "topic": "Scaling laws basics",
+          "why": "Chinchilla math is non-negotiable",
+          "papers": "#12 Chinchilla",
+          "assignment": "A3 Scaling out",
+          "links": [
+            {
+              "label": "Lecture 9",
+              "url": "https://github.com/stanford-cs336/spring2025-lectures/blob/fb79eb018fa047bf99c4c785dcbbd62fff361e54/nonexecutable/2025%20Lecture%209%20-%20Scaling%20laws%20basics.pdf"
+            }
+          ]
+        },
+        {
+          "id": "L10",
+          "n": "10",
+          "topic": "Inference",
+          "why": "KV cache size formula, speculative decoding, PagedAttention",
+          "papers": "#16 LLaMA (GQA)",
+          "assignment": "—",
+          "links": [
+            {
+              "label": "Lecture 10",
+              "url": "http://cs336.stanford.edu/spring2025-lectures/?trace=var/traces/lecture_10.json"
+            }
+          ]
+        },
+        {
+          "id": "L11",
+          "n": "11",
+          "topic": "Scaling laws details",
+          "why": "IsoFLOP curves, parametric loss fits, LR schedule pitfalls",
+          "papers": "#12 Chinchilla",
+          "assignment": "A4 Data out",
+          "links": [
+            {
+              "label": "Lecture 11",
+              "url": "https://github.com/stanford-cs336/spring2025-lectures/blob/00191bba00d6d64621dc46ccaed9122681413a24/nonexecutable/2025%20Lecture%2011%20-%20Scaling%20details.pdf"
+            }
+          ]
+        },
+        {
+          "id": "L12",
+          "n": "12",
+          "topic": "Evaluation",
+          "why": "\"How would you know your model got better?\"",
+          "papers": "#15 CoT (GSM8K)",
+          "assignment": "—",
+          "links": [
+            {
+              "label": "Lecture 12",
+              "url": "http://cs336.stanford.edu/spring2025-lectures/?trace=var/traces/lecture_12.json"
+            }
+          ]
+        },
+        {
+          "id": "L13–14",
+          "n": "13–14",
+          "topic": "Data I, Data II",
+          "why": "Curation and dedup are underrated and commonly asked",
+          "papers": "#6 GPT-3 (data section)",
+          "assignment": "A4",
+          "links": [
+            {
+              "label": "Lecture 13",
+              "url": "http://cs336.stanford.edu/spring2025-lectures/?trace=var/traces/lecture_13.json"
+            },
+            {
+              "label": "Lecture 14",
+              "url": "http://cs336.stanford.edu/spring2025-lectures/?trace=var/traces/lecture_14.json"
+            }
+          ]
+        },
+        {
+          "id": "L15",
+          "n": "15",
+          "topic": "Alignment: SFT/RLHF",
+          "why": "Post-training is now core knowledge",
+          "papers": "#11 InstructGPT, #13 DPO",
+          "assignment": "A5 Alignment out",
+          "links": [
+            {
+              "label": "Lecture 15",
+              "url": "https://github.com/stanford-cs336/spring2025-lectures/blob/61eddac004df975466cff0329b615f2d24230069/nonexecutable/2025%20Lecture%2015%20-%20RLHF%20Alignment.pdf"
+            }
+          ]
+        },
+        {
+          "id": "L16–17",
+          "n": "16–17",
+          "topic": "Alignment: RL / RLVR, RL (Percy)",
+          "why": "PPO vs GRPO is a standard rapid-fire question",
+          "papers": "#8 PPO, #19 GRPO/R1",
+          "assignment": "A5",
+          "links": [
+            {
+              "label": "Lecture 16",
+              "url": "https://github.com/stanford-cs336/spring2025-lectures/blob/e94e33f433985e57036b25215dff2a4292e67a4f/nonexecutable/2025%20Lecture%2016%20-%20RLVR.pdf"
+            },
+            {
+              "label": "Lecture 17",
+              "url": "http://cs336.stanford.edu/spring2025-lectures/?trace=var/traces/lecture_17.json"
+            }
+          ]
+        }
+      ],
+      "assignments": [
+        {
+          "id": "A1",
+          "label": "A1 Basics",
+          "url": "https://github.com/stanford-cs336/assignment1-basics",
+          "tag": "HAND"
+        },
+        {
+          "id": "A2",
+          "label": "A2 Systems",
+          "url": "https://github.com/stanford-cs336/assignment2-systems",
+          "tag": "HAND→AGENT"
+        },
+        {
+          "id": "A3",
+          "label": "A3 Scaling",
+          "url": "https://github.com/stanford-cs336/assignment3-scaling",
+          "tag": "HAND→AGENT"
+        },
+        {
+          "id": "A4",
+          "label": "A4 Data",
+          "url": "https://github.com/stanford-cs336/assignment4-data",
+          "tag": "HAND→AGENT"
+        },
+        {
+          "id": "A5",
+          "label": "A5 Alignment",
+          "url": "https://github.com/stanford-cs336/assignment5-alignment",
+          "tag": "HAND→AGENT"
+        }
+      ],
+      "after": [
+        "**Assignment plan.** [A1 Basics](https://github.com/stanford-cs336/assignment1-basics) is HAND: tokenizer, model, optimizer, training loop, written with autocomplete off (the course itself asks for this). Alisa calls it crucial because implementing and debugging a Transformer comes up so often that it must become muscle memory. A2, A3, A4, A5 are HAND→AGENT: write the core (the online-softmax tile, the IsoFLOP fit, the dedup pass, the GRPO loss) yourself, let agents build the harnesses. Compute for self-study: a single H100 runs ~$2–3/hour on [RunPod](https://runpod.io/pricing) or [Lambda](https://lambda.ai/pricing); debug on CPU first."
+      ],
+      "sources": "[CS336 Spring 2025 schedule](https://cs336.stanford.edu/spring2025/) · [alisa-roadmap README](https://github.com/soasme/alisa-roadmap)"
+    },
+    {
+      "id": "p1",
+      "nav": "Math foundations",
+      "num": 1,
+      "title": "Math foundations",
+      "weeks": "weeks 3–4, then on call",
+      "intro": [
+        "At least one company will run a dedicated math interview, from logic puzzles to pen-and-paper derivations. Everything here is HAND: derive on paper, then confirm numerically in a 10-line script. Each derivation is paired with the paper in Phase 3 that uses it, so the math is never studied in isolation."
+      ],
+      "rows": [
+        {
+          "id": "M1",
+          "area": "Probability",
+          "derive": "Bernoulli → Binomial → Gaussian limit; 68-95-99.7; CLT; multivariate Gaussian",
+          "code": "Sample 10k Bernoullis, plot the binomial mean converging to a Gaussian",
+          "paper": "#9 DDPM (Gaussian forward process)"
+        },
+        {
+          "id": "M2",
+          "area": "Probability",
+          "derive": "MLE: show minimizing cross-entropy is maximizing log-likelihood",
+          "code": "Train logistic regression with both losses, assert identical gradients",
+          "paper": "#4 Transformer (LM loss)"
+        },
+        {
+          "id": "M3",
+          "area": "Probability",
+          "derive": "MAP: show L2 regularization equals a Gaussian prior",
+          "code": "Compare `weight_decay` vs explicit log-prior term",
+          "paper": "#2 Adam (L2 vs AdamW)"
+        },
+        {
+          "id": "M4",
+          "area": "Information theory",
+          "derive": "Entropy; derive perplexity = exp(H); cross-entropy vs KL",
+          "code": "Compute PPL of a tiny LM two ways",
+          "paper": "#12 Chinchilla (loss curves)"
+        },
+        {
+          "id": "M5",
+          "area": "Information theory",
+          "derive": "KL(P ‖ Q) vs KL(Q ‖ P): mode-seeking vs mass-covering; which direction the RLHF penalty uses and why",
+          "code": "Fit a 1-Gaussian to a 2-Gaussian mixture under each direction, plot",
+          "paper": "#11 InstructGPT, #13 DPO"
+        },
+        {
+          "id": "M6",
+          "area": "Linear algebra",
+          "derive": "Matmul FLOPs: (m×k)@(k×n) = 2mnk; derive 6ND for Transformer training",
+          "code": "Count FLOPs for a 124M GPT-2 by hand, check with `torch.utils.flop_counter`",
+          "paper": "#12 Chinchilla, #17 FlashAttention"
+        },
+        {
+          "id": "M7",
+          "area": "Linear algebra",
+          "derive": "SVD $A = U \\Sigma V^\\top$; Eckart–Young: rank-r truncation minimizes Frobenius error",
+          "code": "SVD a fine-tuned ΔW, plot singular values, verify most mass is in top-r",
+          "paper": "#10 LoRA"
+        },
+        {
+          "id": "M8",
+          "area": "Linear algebra",
+          "derive": "Eigendecomposition of symmetric matrices; matrix norms (L1, L2, Frobenius, nuclear) and what each regularizes",
+          "code": "—",
+          "paper": "#10 LoRA"
+        },
+        {
+          "id": "M9",
+          "area": "Calculus",
+          "derive": "Chain rule for a 2-layer MLP; Jacobians for vector→vector maps",
+          "code": "NumPy forward+backward for linear → softmax → cross-entropy, no autograd; assert against `torch.autograd`",
+          "paper": "#1 AlexNet"
+        },
+        {
+          "id": "M10",
+          "area": "Calculus",
+          "derive": "Attention gradient: $\\partial\\,\\mathrm{softmax}(QK^\\top/\\sqrt{d})V / \\partial Q$",
+          "code": "Confirm the √d_k variance argument numerically",
+          "paper": "#4 Transformer"
+        },
+        {
+          "id": "M11",
+          "area": "Optimization",
+          "derive": "Adam update rule; why m̂ and v̂ need bias correction at step 1",
+          "code": "Your 25-line Adam from Module 1, with and without correction",
+          "paper": "#2 Adam"
+        },
+        {
+          "id": "M12",
+          "area": "Optimization",
+          "derive": "Policy gradient: the log-derivative trick, reward-to-go, why a state-only baseline is unbiased",
+          "code": "REINFORCE on a 3-armed bandit, with and without baseline, plot variance",
+          "paper": "#8 PPO, #19 GRPO"
+        }
+      ],
+      "after": [
+        "**Study order.** Read [CS231n backprop notes](https://cs231n.github.io/optimization-2/) first (the NumPy backward pass is asked verbatim). Then Hamish Ivison's [Introduction to Policy Gradient for LMs](https://ivison.id.au/2026/02/09/policy-gradient.html), which derives REINFORCE → baselines → importance weighting → group-relative advantages in LM notation; read it before touching PPO or GRPO. Supplement with Lilian Weng's [Policy Gradient Algorithms](https://lilianweng.github.io/posts/2018-04-08-policy-gradient/) and Chip Huyen's [ML Interviews Book](https://huyenchip.com/ml-interviews-book/) to find gaps."
+      ],
+      "sources": "[alisa-roadmap README, Phase 2](https://github.com/soasme/alisa-roadmap) · [Notes on the Industry Job Search](https://alisawuffles.github.io/blog/job-search/)"
+    },
+    {
+      "id": "p2",
+      "nav": "Muscle-memory drills",
+      "num": 2,
+      "title": "Muscle-memory implementations",
+      "weeks": "from week 5, repeated weekly",
+      "intro": [
+        "This is the HAND list: the boilerplate core you must reproduce from a blank file, with every AI tool off, under the time target. Alisa's rule, which the CS336 honor code also enforces: practice with AI assistance completely off, because you will underestimate your reliance otherwise. Rotate through the table once a week until every row is under target three times in a row; after that, one timed row per day keeps it warm."
+      ],
+      "drills": [
+        {
+          "id": "D1",
+          "row": 1,
+          "slug": "sdpa",
+          "name": "Scaled dot-product attention",
+          "target": "10 min",
+          "must": "The √d_k scaling, −∞ (not 0) in the causal mask, softmax over the key axis",
+          "where": "#4 Transformer"
+        },
+        {
+          "id": "D2",
+          "row": 2,
+          "slug": "multi_head_attention",
+          "name": "Multi-head attention",
+          "target": "20 min",
+          "must": "Split heads → attend → merge via reshape or `einsum`; output projection W_O",
+          "where": "#4 Transformer"
+        },
+        {
+          "id": "D3",
+          "row": 3,
+          "slug": "decoder_block",
+          "name": "Full pre-norm decoder block",
+          "target": "30 min",
+          "must": "LN → MHA → residual → LN → FFN (4×d_model, GeLU or SwiGLU) → residual; parameter count by hand",
+          "where": "#4, #16 LLaMA"
+        },
+        {
+          "id": "D4",
+          "row": 4,
+          "slug": "bpe_tokenizer",
+          "name": "BPE tokenizer",
+          "target": "45 min",
+          "must": "Build vocab from a corpus; encode a new string; state the merge-step complexity",
+          "where": "CS336 A1, Phase 4"
+        },
+        {
+          "id": "D5",
+          "row": 5,
+          "slug": "sampling",
+          "name": "Top-k / top-p sampling with temperature",
+          "target": "15 min",
+          "must": "Temperature before filtering; masking that keeps at least one token",
+          "where": "CS336 L10"
+        },
+        {
+          "id": "D6",
+          "row": 6,
+          "slug": "beam_search",
+          "name": "Beam search",
+          "target": "20 min",
+          "must": "Track log-probs across B beams; handle EOS and length normalization",
+          "where": "CS336 L10"
+        },
+        {
+          "id": "D7",
+          "row": 7,
+          "slug": "training_loop",
+          "name": "Full training loop",
+          "target": "20 min",
+          "must": "Forward, loss, `backward()`, optimizer step, scheduler step, grad clipping, eval split",
+          "where": "#2 Adam, #6 GPT-3"
+        },
+        {
+          "id": "D8",
+          "row": 8,
+          "slug": "numpy_backprop",
+          "name": "NumPy backprop",
+          "target": "45 min",
+          "must": "Linear → softmax → cross-entropy, analytic gradients, no autograd",
+          "where": "#1 AlexNet, Phase 1"
+        },
+        {
+          "id": "D9",
+          "row": 9,
+          "slug": "adam",
+          "name": "Adam optimizer",
+          "target": "15 min",
+          "must": "m, v, bias correction, decoupled weight decay",
+          "where": "#2 Adam"
+        },
+        {
+          "id": "D10",
+          "row": 10,
+          "slug": "lora",
+          "name": "LoRA wrapper around `nn.Linear`",
+          "target": "10 min",
+          "must": "B = 0 init, A ~ N(0, σ²), α/r scaling, merge for inference",
+          "where": "#10 LoRA"
+        },
+        {
+          "id": "D11",
+          "row": 11,
+          "slug": "rope",
+          "name": "RoPE",
+          "target": "15 min",
+          "must": "Complex rotation of Q and K; dot product depends only on m − n",
+          "where": "#16 LLaMA"
+        },
+        {
+          "id": "D12",
+          "row": 12,
+          "slug": "kv_cache",
+          "name": "KV cache for generation",
+          "target": "20 min",
+          "must": "Prefill vs decode; append K, V per step; compute only the new Q",
+          "where": "CS336 L10"
+        },
+        {
+          "id": "D13",
+          "row": 13,
+          "slug": "gqa",
+          "name": "GQA / MQA attention",
+          "target": "15 min",
+          "must": "n_kv_heads < n_heads via `repeat_interleave`; KV-cache memory drops by n_heads/n_kv_heads",
+          "where": "#16 LLaMA"
+        },
+        {
+          "id": "D14",
+          "row": 14,
+          "slug": "dpo_loss",
+          "name": "DPO loss",
+          "target": "10 min",
+          "must": "`-logsigmoid(β((πw−refw)−(πl−refl))).mean()`",
+          "where": "#13 DPO"
+        },
+        {
+          "id": "D15",
+          "row": 15,
+          "slug": "grpo_loss",
+          "name": "GRPO advantage + clipped loss",
+          "target": "20 min",
+          "must": "Group-normalized advantages, importance ratio with stop-gradient on old log-probs, clip",
+          "where": "#19 GRPO"
+        },
+        {
+          "id": "D16",
+          "row": 16,
+          "slug": "ppo_loss",
+          "name": "PPO clipped surrogate + GAE",
+          "target": "30 min",
+          "must": "`min(rA, clip(r,1−ε,1+ε)A)`, GAE recursion, value loss, entropy bonus",
+          "where": "#8 PPO"
+        },
+        {
+          "id": "D17",
+          "row": 17,
+          "slug": "online_softmax",
+          "name": "Online (tiled) softmax",
+          "target": "20 min",
+          "must": "Running max and denominator rescaled by exp(m_old − m_new); `allclose` vs `F.softmax`",
+          "where": "#17 FlashAttention"
+        },
+        {
+          "id": "D18",
+          "row": 18,
+          "slug": "moe_router",
+          "name": "Top-k MoE router",
+          "target": "20 min",
+          "must": "Softmax gate, top-2 dispatch, load-balancing auxiliary loss",
+          "where": "#18 MoE"
+        },
+        {
+          "id": "D19",
+          "row": 19,
+          "slug": "flow_matching",
+          "name": "Flow-matching loss + Euler sampler",
+          "target": "15 min",
+          "must": "x_t = (1−t)x₀ + t x₁, v_θ ≈ x₁ − x₀, Euler loop",
+          "where": "#21 Flow Matching"
+        }
+      ],
+      "playlist": {
+        "title": "Karpathy — Neural Networks: Zero to Hero",
+        "list": "PLAqhIrjkxbuWI23v9cThsA9GvCAUhRvKZ"
+      },
+      "after": [
+        "**Reference implementations to read once, then close.** Karpathy's [build-nanogpt](https://github.com/karpathy/build-nanogpt) and [minbpe](https://github.com/karpathy/minbpe) ([Neural Networks: Zero to Hero playlist](https://www.youtube.com/playlist?list=PLAqhIrjkxbuWI23v9cThsA9GvCAUhRvKZ)), [The Illustrated GPT-2](https://jalammar.github.io/illustrated-gpt2/), and the [CS224N self-attention and Transformers notes](https://web.stanford.edu/class/cs224n/readings/cs224n-self-attention-transformers-2023_draft.pdf). Read them before the first drill, never during one.",
+        "**AGENT work around the drills.** Have a coding agent build you a drill harness: a repo with one `test_<row>.py` per row that asserts your from-scratch output against the PyTorch reference, plus a timer. You write the implementation files; the agent writes and maintains the tests."
+      ],
+      "sources": "[alisa-roadmap README, Phase 3](https://github.com/soasme/alisa-roadmap) · [Notes on the Industry Job Search](https://alisawuffles.github.io/blog/job-search/)"
+    },
+    {
+      "id": "p3",
+      "nav": "21-paper curriculum",
+      "num": 3,
+      "title": "The 21-paper curriculum, merged with the concept deep-dives",
+      "weeks": "weeks 5–20",
+      "intro": [
+        "Your paper sequence stays intact; what changes is that each paper now also carries the interview questions and \"what to master\" items from Alisa's map, and each experiment carries a HAND / HAND→AGENT / AGENT tag. The weekly loop per paper (Day 1 read, Day 2 derive and watch, Day 3 break it) is in the Execution section. Paper 1 (AlexNet) is already done in your notebook; start at Paper 2."
+      ],
+      "after": [
+        "**What goes on the CV from this phase.** Two or three of the HAND→AGENT experiments, polished into small public repos with a README that states the hypothesis, the one-line change that broke the equation, and the plot. Candidates: the Transformer scaling/masking ablation (#4), the MoE routing-collapse study (#18), and the GRPO group-size study (#19). These are the ones you can defend line by line in a technical discussion."
+      ],
+      "sources": "your 21-paper roadmap PDF · [alisa-roadmap README, Phase 1](https://github.com/soasme/alisa-roadmap) · [Ivison, Introduction to Policy Gradient for LMs](https://ivison.id.au/2026/02/09/policy-gradient.html) · [Manohar, Lightweight Guide to GRPO](https://gitlostmurali.com/blog/grpo-intro)"
+    },
+    {
+      "id": "p4",
+      "nav": "Systems and infra",
+      "num": 4,
+      "title": "Systems and infra topics the papers skip",
+      "weeks": "weeks 21–22, plus rapid-fire review",
+      "intro": [
+        "Five topic clusters from Alisa's map have no paper in your curriculum but appear constantly in rapid-fire technical discussions. Each gets a reading, a small HAND implementation, and the specific question it is known to unlock."
+      ],
+      "clusters": [
+        {
+          "id": "C1",
+          "name": "Tokenization",
+          "slug": "tokenization",
+          "read": "[CS336 L1](http://cs336.stanford.edu/spring2025-lectures/?trace=var/traces/lecture_01.json); [minbpe](https://github.com/karpathy/minbpe); [CS336 A1 handout](https://github.com/stanford-cs336/assignment1-basics/blob/main/cs336_spring2025_assignment1_basics.pdf)",
+          "master": "BPE merge algorithm; WordPiece vs SentencePiece; pre-tokenization and Unicode normalization; why \" hello\" and \"hello\" differ; vocab-size trade-off (fewer tokens per sentence vs more embedding params); why bad tokenization hurts code and multilingual models",
+          "hand": "BPE from a corpus, 45 min (Phase 2)",
+          "question": "\"Time complexity of the merge step?\" \"Why does tokenizer efficiency shift the Chinchilla frontier?\""
+        },
+        {
+          "id": "C2",
+          "name": "Inference and the KV cache",
+          "slug": "inference-kv-cache",
+          "read": "[CS336 L10](http://cs336.stanford.edu/spring2025-lectures/?trace=var/traces/lecture_10.json); [Scaling book ch. 7](https://jax-ml.github.io/scaling-book/inference); [PagedAttention / vLLM](https://arxiv.org/abs/2309.06180); [speculative decoding](https://arxiv.org/abs/2211.17192)",
+          "master": "Prefill (parallel) vs decode (sequential); KV cache size = 2 × n_layers × seq_len × d_model × bytes; what happens when VRAM runs out; speculative decoding (~2–3x); PagedAttention as OS-style virtual memory; greedy vs beam vs top-k vs top-p vs temperature and the failure modes of each",
+          "hand": "KV cache for generation, 20 min; top-k/top-p and beam search (Phase 2)",
+          "question": "\"70B model, 96 layers, d_model 8192, bf16, one 128K sequence — how much KV memory?\" (~200 GB)"
+        },
+        {
+          "id": "C3",
+          "name": "Distributed training",
+          "slug": "distributed-training",
+          "read": "[CS336 L7](https://github.com/stanford-cs336/spring2025-lectures/blob/4eff81bee0a853217209e163936b264f03572b66/nonexecutable/2025%20Lecture%207%20-%20Parallelism%20basics.pdf)–[8](http://cs336.stanford.edu/spring2025-lectures/?trace=var/traces/lecture_08.json); [Scaling book ch. 3](https://jax-ml.github.io/scaling-book/sharding), [ch. 5](https://jax-ml.github.io/scaling-book/training), [ch. 12 (GPUs)](https://jax-ml.github.io/scaling-book/gpus); [ZeRO](https://arxiv.org/abs/1910.02054); [Megatron-LM](https://arxiv.org/abs/1909.08053); [CS336 A2](https://github.com/stanford-cs336/assignment2-systems)",
+          "master": "Data parallel (AllReduce gradients) vs tensor parallel (split weight matrices, AllGather activations) vs pipeline parallel (micro-batches to shrink the bubble) vs expert parallel; ZeRO stages 1–3; rematerialization, gradient accumulation, host offload; roofline reasoning (compute vs memory vs communication bound); \"5D parallelism\"",
+          "hand": "A memory-math worksheet: params, grads, Adam states, activations per GPU under each scheme (HAND, on paper); the distributed trainer itself is AGENT, from CS336 A2",
+          "question": "\"8 × 80 GB A100s, 70B model — walk me through memory math and parallelism strategy.\" \"What is 5D parallelism?\""
+        },
+        {
+          "id": "C4",
+          "name": "Evaluation",
+          "slug": "evaluation",
+          "read": "[CS336 L12](http://cs336.stanford.edu/spring2025-lectures/?trace=var/traces/lecture_12.json)",
+          "master": "Perplexity vs downstream benchmarks; contamination; pass@k; LM-as-judge pitfalls; why a benchmark gain can be a metric artifact (ties into the emergence debate)",
+          "hand": "A pass@k estimator from n samples (10 lines)",
+          "question": "\"How would you know if your model got better?\""
+        },
+        {
+          "id": "C5",
+          "name": "Data",
+          "slug": "data",
+          "read": "[CS336 L13](http://cs336.stanford.edu/spring2025-lectures/?trace=var/traces/lecture_13.json)–[14](http://cs336.stanford.edu/spring2025-lectures/?trace=var/traces/lecture_14.json); [CS336 A4](https://github.com/stanford-cs336/assignment4-data); GPT-3 and Llama 3 data sections",
+          "master": "Common Crawl → usable text: language ID, quality filters, exact and fuzzy dedup (MinHash), PII removal; data mixing and curriculum",
+          "hand": "MinHash dedup on a small corpus (HAND→AGENT)",
+          "question": "\"Design a filtering pipeline and tell me how you'd validate it.\""
+        }
+      ],
+      "after": [
+        "**The scaling book.** [How to Scale Your Model](https://jax-ml.github.io/scaling-book/) (Austin et al., Google DeepMind) is the reference for the infra cluster. Read chapters 1, 4, 5 and 7 in full and work the exercises; skim 2, 3 and 12 for notation; chapters 6 and 8 (training and serving Llama 3) are the worked examples to reproduce the arithmetic for on paper."
+      ],
+      "sources": "[alisa-roadmap README, Phase 1 and 2 sections](https://github.com/soasme/alisa-roadmap) · [CS336 Spring 2025](https://cs336.stanford.edu/spring2025/) · [How to Scale Your Model](https://jax-ml.github.io/scaling-book/)"
+    },
+    {
+      "id": "p5",
+      "nav": "General coding",
+      "num": 5,
+      "title": "General coding fluency",
+      "weeks": "30 minutes daily from week 3",
+      "intro": [
+        "Target: LeetCode Mediums consistently under 25 minutes, with AI off. This is a daily habit, not a phase, because algorithmic patterns leak into ML-coding rounds (top-K heaps are decoding; sliding windows are sliding-window attention; DP is beam search and edit distance). Alisa's two lists are the whole syllabus: [LeetCode 75](https://leetcode.com/studyplan/leetcode-75/) first, then [NeetCode Blind 75](https://neetcode.io/practice/practice/blind75)."
+      ],
+      "lists": [
+        {
+          "id": "LC75",
+          "label": "LeetCode 75",
+          "url": "https://leetcode.com/studyplan/leetcode-75/",
+          "total": 75
+        },
+        {
+          "id": "B75",
+          "label": "NeetCode Blind 75",
+          "url": "https://neetcode.io/practice/practice/blind75",
+          "total": 75
+        }
+      ],
+      "topics": [
+        {
+          "id": "T1",
+          "topic": "Arrays, strings, hash maps",
+          "reach": "The base of most problems",
+          "tie": "Tokenizer merge tables"
+        },
+        {
+          "id": "T2",
+          "topic": "Two pointers / sliding window",
+          "reach": "Fixed and variable windows",
+          "tie": "Sliding-window attention, local masks"
+        },
+        {
+          "id": "T3",
+          "topic": "Binary search",
+          "reach": "Including search on the answer space",
+          "tie": "Hyperparameter bisection, top-p cutoff"
+        },
+        {
+          "id": "T4",
+          "topic": "Stacks, queues",
+          "reach": "BFS/DFS traversal patterns",
+          "tie": "Beam-search frontier"
+        },
+        {
+          "id": "T5",
+          "topic": "Trees",
+          "reach": "DFS, BFS, LCA; trees disguised as graphs",
+          "tie": "Parse trees, MCTS-style search"
+        },
+        {
+          "id": "T6",
+          "topic": "Graphs",
+          "reach": "BFS, DFS, topological sort, Dijkstra",
+          "tie": "Autograd DAG ordering, pipeline schedules"
+        },
+        {
+          "id": "T7",
+          "topic": "Dynamic programming",
+          "reach": "1D and 2D; memo vs tabulation; edit distance, coin change, LCS",
+          "tie": "Viterbi, CTC, beam search"
+        },
+        {
+          "id": "T8",
+          "topic": "Heaps / priority queues",
+          "reach": "Top-K problems",
+          "tie": "Top-k sampling, beam search"
+        },
+        {
+          "id": "T9",
+          "topic": "Sorting",
+          "reach": "Quick, merge, heap; time and space for each",
+          "tie": "Length-bucketing batches"
+        }
+      ],
+      "after": [
+        "Keep a one-line log per problem (pattern, time, mistake). Every two weeks, redo the five slowest."
+      ],
+      "sources": "[alisa-roadmap README, Phase 4](https://github.com/soasme/alisa-roadmap) · [Notes on the Industry Job Search, Appendix](https://alisawuffles.github.io/blog/job-search/)"
+    },
+    {
+      "id": "p6",
+      "nav": "Portfolio and interviews",
+      "num": 6,
+      "title": "Research portfolio, technical discussion, job talk, behavioral",
+      "weeks": "weeks 23–24, then continuous",
+      "intro": [
+        "Research gets you the interview; this phase makes sure you can defend it. Alisa's framing: the technical-discussion round is the most underrated, and the behavioral round is the one she failed first by assuming she was \"obviously well-behaved\" and then going blank.",
+        "**Build the portfolio (AGENT-heavy, HAND-defensible).** As a student without a PhD paper trail, your CV projects are the research record. Aim for three public projects by week 20, each with a hypothesis, an ablation, a plot, and a README written in the \"why I did it\" voice:"
+      ],
+      "portfolio": [
+        {
+          "id": "PF1",
+          "text": "One from the Phase 3 break-it experiments (see the CV note at the end of Phase 3)."
+        },
+        {
+          "id": "PF2",
+          "text": "One systems project: a from-scratch GPT-2 124M reproduction on [build-nanogpt](https://github.com/karpathy/build-nanogpt) with your own throughput log, or [CS336 A2](https://github.com/stanford-cs336/assignment2-systems)'s FlashAttention-2 Triton kernel with a benchmark table."
+        },
+        {
+          "id": "PF3",
+          "text": "One post-training project: the mini-GRPO or DPO run from [CS336 A5](https://github.com/stanford-cs336/assignment5-alignment), with reward curves and a failure-mode study (β = 0, G = 2)."
+        }
+      ],
+      "afterPortfolio": "For each, the HAND core (model, loss, loop) is yours; the harness, sweeps and plots are the agent's; and you must be able to answer \"why is this line here?\" for every file. Write the design-choice list before you consider a project done.",
+      "prep": [
+        {
+          "id": "PR1",
+          "title": "Technical and research discussion prep",
+          "text": "For every project, write a one-page \"why\" narrative, not a \"what\" summary: every major design choice with its defensible reason, what you tried that failed, what you would do differently, and what you would do with 10x the compute. Form opinions on three to five research directions you believe in right now. Tailor the pitch to the role: interviewers are tired, so hit the keywords of the team's area."
+        },
+        {
+          "id": "PR2",
+          "title": "Rapid-fire set, out loud",
+          "text": "Drill the rapid-fire set out loud, with AI as the examiner: ways to encode position; 5D parallelism; PPO vs GRPO; pre- vs post-norm; LoRA layer choice; why Flash Attention is faster without changing the math; the KV-cache formula; Chinchilla's N* and D*. Read the target company's last six months of papers and reference them naturally."
+        },
+        {
+          "id": "PR3",
+          "title": "Job talk (if asked)",
+          "text": "45–60 minutes, 80%+ on first-author or lead-author work, second-author and ongoing work in the last 10 minutes. Expect deep Q&A on every baseline and experimental choice; rehearse with people who push back hard."
+        },
+        {
+          "id": "PR4",
+          "title": "Behavioral",
+          "text": "Write down five to ten memorable stories now and map each to leadership, conflict, failure, impact, collaboration in STAR form, so retrieval is instant. Prepare specific answers to \"Why this company?\" and to \"What is your view on AI safety and responsible development?\" — frontier labs ask the second one seriously and want a considered position. After every interview, record notes the same day; they feed the next cram."
+        }
+      ],
+      "sources": "[alisa-roadmap README, Phases 5–7](https://github.com/soasme/alisa-roadmap) · [Notes on the Industry Job Search](https://alisawuffles.github.io/blog/job-search/)"
+    },
+    {
+      "id": "p7",
+      "nav": "Getting in the door",
+      "num": 7,
+      "title": "Getting in the door — networking, sequencing, negotiation",
+      "weeks": "from week 1, in parallel",
+      "intro": [
+        "One referral is worth roughly forty cold applications (cold applications reply at ~1–2%, referrals at ~20%+), so the pipeline is built months before you need it, in parallel with everything above."
+      ],
+      "groups": [
+        {
+          "title": "Build the referral pipeline (from week 1)",
+          "ordered": false,
+          "items": [
+            {
+              "id": "N1",
+              "text": "Be visible at NeurIPS, ICML, ICLR, ACL, EMNLP — talk to people, don't just attend. Workshops and poster sessions are easier entry points for a student."
+            },
+            {
+              "id": "N2",
+              "text": "Collaborate across institutions; co-authors become referrers. Open-source contributions to repos labs actually use (vLLM, TRL, nanoGPT forks, CS336 leaderboards) are the student equivalent."
+            },
+            {
+              "id": "N3",
+              "text": "Reach out informally months before searching: nobody refers a stranger. Reconnecting with people you haven't spoken to in years is normal and expected."
+            },
+            {
+              "id": "N4",
+              "text": "Ask advisors, classmates and collaborators who already moved to industry. Use friends and recruiters to learn which teams actually have headcount; that can matter more than your preparation."
+            }
+          ]
+        },
+        {
+          "title": "Sequence the applications",
+          "ordered": true,
+          "items": [
+            {
+              "id": "S1",
+              "text": "Apply to less-desired companies first; they are practice, not consolation prizes. Watch your stamina — do not burn out before the companies you care about."
+            },
+            {
+              "id": "S2",
+              "text": "Do not open your top-choice processes until you hold at least one offer; leverage multiplies."
+            },
+            {
+              "id": "S3",
+              "text": "Time processes so offers land close together. Deadlines are flexible and recruiters expect you to finish other processes, but investigate each company's reputation for \"exploding\" offers."
+            },
+            {
+              "id": "S4",
+              "text": "Customize prep per company: recent papers, research agenda, product. Each interview is a slightly different class with three days to cram, so keep per-topic notes you can swap in."
+            }
+          ]
+        }
+      ],
+      "after": [
+        "**Negotiate.** The work is not done at the offer. Initial offers leave room by design and recruiters will say so. Before every recruiter call, write down what you will and will not share and a few lines you can say verbatim; anticipate their questions. Lean on friends for market data points. A few weeks of effort here can equal years of pay difference at the initial number."
+      ],
+      "sources": "[alisa-roadmap README, Phase 8](https://github.com/soasme/alisa-roadmap) · [Notes on the Industry Job Search](https://alisawuffles.github.io/blog/job-search/) · [Nathan Lambert, AI PhD job hunt](https://natolambert.com/writing/ai-phd-job-hunt)"
+    }
+  ],
+  "modules": [
+    {
+      "id": 1,
+      "title": "Optimization and depth",
+      "slug": "optimization-depth"
+    },
+    {
+      "id": 2,
+      "title": "The Transformer era",
+      "slug": "transformer-era"
+    },
+    {
+      "id": 3,
+      "title": "Reinforcement learning and generative modeling",
+      "slug": "rl-generative"
+    },
+    {
+      "id": 4,
+      "title": "Scaling, adaptation and alignment",
+      "slug": "scaling-adaptation-alignment"
+    },
+    {
+      "id": 5,
+      "title": "Reasoning",
+      "slug": "reasoning"
+    },
+    {
+      "id": 6,
+      "title": "The modern open-model blueprint",
+      "slug": "open-model-blueprint"
+    },
+    {
+      "id": 7,
+      "title": "Reasoning RL",
+      "slug": "reasoning-rl"
+    },
+    {
+      "id": 8,
+      "title": "Modern generative modeling",
+      "slug": "modern-generative"
+    }
+  ],
+  "papers": [
+    {
+      "n": 1,
+      "module": 1,
+      "slug": "alexnet",
+      "short": "AlexNet",
+      "year": "2012",
+      "title": "ImageNet Classification with Deep Convolutional Neural Networks",
+      "paper": [
+        {
+          "label": "Paper",
+          "url": "https://papers.nips.cc/paper_files/paper/2012/hash/c399862d3b9d6b76c8436e924a68c45b-Abstract.html"
+        },
+        {
+          "label": "PDF",
+          "url": "https://proceedings.neurips.cc/paper_files/paper/2012/file/c399862d3b9d6b76c8436e924a68c45b-Paper.pdf"
+        }
+      ],
+      "videos": [
+        {
+          "title": "AlexNet Paper Walkthrough",
+          "id": "TWyp0_DEwCI"
+        }
+      ],
+      "resources": [],
+      "approach": "Sections 3–4: non-saturating ReLU (6x faster than tanh), overlapping pooling, PCA color augmentation, dropout p=0.5.",
+      "hooks": "\"Why did depth + GPUs + regularization unlock representation learning?\"",
+      "experiments": [
+        {
+          "tag": "HAND→AGENT",
+          "body": "Swap ReLU for tanh/sigmoid in a 5-layer CIFAR-10 CNN, plot per-layer `param.grad.norm()`."
+        },
+        {
+          "tag": "HAND→AGENT",
+          "body": "Remove dropout and weight decay, watch train acc hit 100% while val loss explodes."
+        }
+      ],
+      "note": ""
+    },
+    {
+      "n": 2,
+      "module": 1,
+      "slug": "adam",
+      "short": "Adam",
+      "year": "2014",
+      "title": "Adam: A Method for Stochastic Optimization",
+      "paper": [
+        {
+          "label": "Paper",
+          "url": "https://arxiv.org/abs/1412.6980"
+        },
+        {
+          "label": "PDF",
+          "url": "https://arxiv.org/pdf/1412.6980.pdf"
+        }
+      ],
+      "videos": [
+        {
+          "title": "Adam Optimizer Explained in Detail",
+          "id": "N5AynalXD9g"
+        },
+        {
+          "title": "Gradient Descent Made Better",
+          "id": "XHF2jW_U3iM"
+        }
+      ],
+      "resources": [],
+      "approach": "Algorithm 1 and Section 3 (bias correction). How $m_t$ (momentum) and $v_t$ (uncentered variance) combine AdaGrad and RMSProp.",
+      "hooks": "(math round): derive the update, explain why bias correction matters at step 1.",
+      "experiments": [
+        {
+          "tag": "HAND",
+          "body": "25-line custom `torch.optim.Optimizer`; delete the $/(1-\\beta_1^t)$ and $/(1-\\beta_2^t)$ divisions and watch the first steps jump because $v_1 \\approx 0$."
+        },
+        {
+          "tag": "HAND→AGENT",
+          "body": "Sweep L2-in-gradient vs decoupled AdamW across LRs."
+        }
+      ],
+      "note": ""
+    },
+    {
+      "n": 3,
+      "module": 1,
+      "slug": "resnet",
+      "short": "ResNet",
+      "year": "2015",
+      "title": "Deep Residual Learning for Image Recognition",
+      "paper": [
+        {
+          "label": "Paper",
+          "url": "https://arxiv.org/abs/1512.03385"
+        },
+        {
+          "label": "PDF",
+          "url": "https://arxiv.org/pdf/1512.03385.pdf"
+        }
+      ],
+      "videos": [
+        {
+          "title": "ResNet Explained in <10 Mins",
+          "id": "o_3mboe1jYI"
+        },
+        {
+          "title": "W&B ResNet Paper Reading",
+          "id": "nspf00KpU-g"
+        }
+      ],
+      "resources": [],
+      "approach": "Separate vanishing gradients (fixed by BatchNorm) from the degradation problem (deeper plain nets have higher training error). Why $F(x) = H(x) - x$ is easier than learning identity.",
+      "hooks": "\"What training failure do residuals prevent?\" (asked in the Transformer section too).",
+      "experiments": [
+        {
+          "tag": "HAND→AGENT",
+          "body": "`out = block(x) + alpha * x` with alpha ∈ {0, 1}, 20- vs 56-layer on CIFAR-10; watch the 56-layer plain net lose."
+        },
+        {
+          "tag": "HAND→AGENT",
+          "body": "Zero-init the last BatchNorm γ in each block so blocks start as identity (the same trick reappears in #20 DiT)."
+        }
+      ],
+      "note": ""
+    },
+    {
+      "n": 4,
+      "module": 2,
+      "slug": "transformer",
+      "short": "Attention Is All You Need",
+      "year": "2017",
+      "title": "Attention Is All You Need",
+      "paper": [
+        {
+          "label": "Paper",
+          "url": "https://arxiv.org/abs/1706.03762"
+        },
+        {
+          "label": "PDF",
+          "url": "https://arxiv.org/pdf/1706.03762.pdf"
+        }
+      ],
+      "videos": [
+        {
+          "title": "Yannic Kilcher Walkthrough",
+          "id": "iDulhoQ2pro"
+        },
+        {
+          "title": "Umar Jamil Code & Tensor Shapes",
+          "id": "bCz4OMemCcA"
+        }
+      ],
+      "resources": [
+        {
+          "label": "CS224N notes",
+          "url": "https://web.stanford.edu/class/cs224n/readings/cs224n-self-attention-transformers-2023_draft.pdf"
+        },
+        {
+          "label": "Illustrated GPT-2",
+          "url": "https://jalammar.github.io/illustrated-gpt2/"
+        },
+        {
+          "label": "CS336 L3",
+          "url": "https://github.com/stanford-cs336/spring2025-lectures/blob/e9cb2488fdb53ea37f0e38924ec3a1701925cef3/nonexecutable/2025%20Lecture%203%20-%20architecture.pdf"
+        }
+      ],
+      "approach": "Section 3.2 and Table 1. Why $\\mathrm{softmax}(QK^\\top/\\sqrt{d_k})V$ stops variance growing with $d_k$; $O(1)$ max path length.",
+      "hooks": "**Must master (rapid-fire):** parameter count for d_model=1024, 16 heads, 24 layers, 50K vocab; why FFN expands to 4×d_model; pre-norm vs post-norm gradient flow; LayerNorm vs RMSNorm; ReLU → GeLU → SwiGLU; why modern models drop dropout; what individual heads learn; sinusoidal vs learned vs RoPE vs ALiBi ([RoPE paper](https://arxiv.org/abs/2104.09864), [ALiBi paper](https://arxiv.org/abs/2108.12409)) and why absolute encodings fail past training length.",
+      "experiments": [
+        {
+          "tag": "HAND",
+          "body": "Remove `/ math.sqrt(d_k)` at d_k=512, feed random normal Q, K, inspect `Q.grad` — softmax goes one-hot and gradients vanish."
+        },
+        {
+          "tag": "HAND",
+          "body": "Change −inf to 0 in the causal mask; val loss collapses to ~0 while generation is garbage."
+        }
+      ],
+      "note": "This is the single most-asked implementation; the full decoder block is Phase 2 row 3."
+    },
+    {
+      "n": 5,
+      "module": 2,
+      "slug": "vit",
+      "short": "ViT",
+      "year": "2020",
+      "title": "An Image is Worth 16x16 Words",
+      "paper": [
+        {
+          "label": "Paper",
+          "url": "https://arxiv.org/abs/2010.11929"
+        },
+        {
+          "label": "PDF",
+          "url": "https://arxiv.org/pdf/2010.11929.pdf"
+        }
+      ],
+      "videos": [
+        {
+          "title": "Yannic Kilcher ViT Walkthrough",
+          "id": "Gl48KciWZp0"
+        }
+      ],
+      "resources": [],
+      "approach": "How 16×16 patching removes CNN inductive biases (locality, translation equivariance). Figure 7: RGB PCA filters, position-embedding cosine similarity, attention distance by depth. Takeaway: scale beats inductive bias past ~14M images.",
+      "hooks": "",
+      "experiments": [
+        {
+          "tag": "HAND→AGENT",
+          "body": "Tiny ViT vs ResNet-18 on 5k CIFAR-10 images; ResNet wins."
+        },
+        {
+          "tag": "HAND",
+          "body": "Zero `pos_embedding`, shuffle patches, verify the [CLS] output is identical (permutation equivariance)."
+        }
+      ],
+      "note": ""
+    },
+    {
+      "n": 6,
+      "module": 2,
+      "slug": "gpt3",
+      "short": "GPT-3",
+      "year": "2020",
+      "title": "Language Models are Few-Shot Learners",
+      "paper": [
+        {
+          "label": "Paper",
+          "url": "https://arxiv.org/abs/2005.14165"
+        },
+        {
+          "label": "PDF",
+          "url": "https://arxiv.org/pdf/2005.14165.pdf"
+        }
+      ],
+      "videos": [
+        {
+          "title": "Yannic Kilcher GPT-3 Walkthrough",
+          "id": "SY5PvZrJhLE"
+        },
+        {
+          "title": "Karpathy: Reproduce GPT-2 (124M)",
+          "id": "l8pRSuU81PU"
+        }
+      ],
+      "resources": [
+        {
+          "label": "Karpathy build-nanogpt (repo)",
+          "url": "https://github.com/karpathy/build-nanogpt"
+        },
+        {
+          "label": "CS336 L2",
+          "url": "http://cs336.stanford.edu/spring2025-lectures/?trace=var/traces/lecture_02.json"
+        },
+        {
+          "label": "CS336 L13",
+          "url": "http://cs336.stanford.edu/spring2025-lectures/?trace=var/traces/lecture_13.json"
+        },
+        {
+          "label": "CS336 L14",
+          "url": "http://cs336.stanford.edu/spring2025-lectures/?trace=var/traces/lecture_14.json"
+        }
+      ],
+      "approach": "Figure 1.2 and Section 3: in-context learning with no weight updates; scaling curves on WordScramble and translation. Read the data section (Common Crawl filtering, dedup) alongside CS336 Data lectures.",
+      "hooks": "",
+      "experiments": [
+        {
+          "tag": "HAND→AGENT",
+          "body": "Follow build-nanogpt and log tokens/sec as you enable `set_float32_matmul_precision('high')`, bf16 autocast, `torch.compile`, FlashAttention, and vocab padding 50257 → 50304."
+        },
+        {
+          "tag": "AGENT",
+          "body": "Few-shot label-flipping (Great movie → Negative) on an open 7B model to see scale override priors."
+        }
+      ],
+      "note": ""
+    },
+    {
+      "n": 7,
+      "module": 3,
+      "slug": "dqn",
+      "short": "DQN",
+      "year": "2013",
+      "title": "Playing Atari with Deep Reinforcement Learning",
+      "paper": [
+        {
+          "label": "Paper",
+          "url": "https://arxiv.org/abs/1312.5602"
+        },
+        {
+          "label": "PDF",
+          "url": "https://arxiv.org/pdf/1312.5602.pdf"
+        }
+      ],
+      "videos": [
+        {
+          "title": "Yannic Kilcher DQN Walkthrough",
+          "id": "rFwQDDbYTm4"
+        }
+      ],
+      "resources": [],
+      "approach": "The deadly triad (function approximation, bootstrapping, off-policy). Why experience replay breaks temporal correlation and why a target network stabilizes moving Bellman targets.",
+      "hooks": "",
+      "experiments": [
+        {
+          "tag": "HAND",
+          "body": "100-line DQN on `CartPole-v1`; set replay buffer = batch_size, or update the target net every step — Q-values diverge."
+        },
+        {
+          "tag": "HAND→AGENT",
+          "body": "Frame-stacking ablation."
+        }
+      ],
+      "note": ""
+    },
+    {
+      "n": 8,
+      "module": 3,
+      "slug": "ppo",
+      "short": "PPO",
+      "year": "2017",
+      "title": "Proximal Policy Optimization Algorithms",
+      "paper": [
+        {
+          "label": "Paper",
+          "url": "https://arxiv.org/abs/1707.06347"
+        },
+        {
+          "label": "PDF",
+          "url": "https://arxiv.org/pdf/1707.06347.pdf"
+        }
+      ],
+      "videos": [
+        {
+          "title": "UC Berkeley CS285: Policy Gradients",
+          "id": "KZd508qGFt0"
+        },
+        {
+          "title": "John Schulman: TRPO & PPO",
+          "id": "xvRrgxcpaHY"
+        }
+      ],
+      "resources": [
+        {
+          "label": "Ivison: Policy Gradient for LMs (read first)",
+          "url": "https://ivison.id.au/2026/02/09/policy-gradient.html"
+        },
+        {
+          "label": "CleanRL ppo.py",
+          "url": "https://github.com/vwxyzjn/cleanrl"
+        },
+        {
+          "label": "CS336 L16",
+          "url": "https://github.com/stanford-cs336/spring2025-lectures/blob/e94e33f433985e57036b25215dff2a4292e67a4f/nonexecutable/2025%20Lecture%2016%20-%20RLVR.pdf"
+        },
+        {
+          "label": "CS336 L17",
+          "url": "http://cs336.stanford.edu/spring2025-lectures/?trace=var/traces/lecture_17.json"
+        }
+      ],
+      "approach": "Trace why vanilla PG collapses when one step moves the policy too far. Equation 7 (clipped surrogate) and GAE. First-order clipping buys TRPO-style trust-region stability cheaply.",
+      "hooks": "**Rapid-fire:** PPO vs GRPO — PPO keeps a learned value/critic, GRPO replaces it with group-normalized rewards.",
+      "experiments": [
+        {
+          "tag": "HAND→AGENT",
+          "body": "In CleanRL's `ppo.py` on LunarLander, delete `torch.clamp(ratio, 1−ε, 1+ε)` and raise `update_epochs` 4 → 20; KL spikes, policy collapses to one action."
+        },
+        {
+          "tag": "HAND→AGENT",
+          "body": "Disable advantage normalization and watch variance explode."
+        }
+      ],
+      "note": ""
+    },
+    {
+      "n": 9,
+      "module": 3,
+      "slug": "ddpm",
+      "short": "DDPM",
+      "year": "2020",
+      "title": "Denoising Diffusion Probabilistic Models",
+      "paper": [
+        {
+          "label": "Paper",
+          "url": "https://arxiv.org/abs/2006.11239"
+        },
+        {
+          "label": "PDF",
+          "url": "https://arxiv.org/pdf/2006.11239.pdf"
+        }
+      ],
+      "videos": [
+        {
+          "title": "Stanford CS236: Score & Diffusion",
+          "id": "VsllsC2JMGY"
+        },
+        {
+          "title": "Umar Jamil DDPM Code & Math",
+          "id": "I1sPXkm2NH4"
+        }
+      ],
+      "resources": [],
+      "approach": "Derive the closed-form forward jump $x_t = \\sqrt{\\bar\\alpha_t}\\,x_0 + \\sqrt{1-\\bar\\alpha_t}\\,\\epsilon$. Section 3.2: why predicting $\\epsilon$ with MSE equals the ELBO and score matching.",
+      "hooks": "",
+      "experiments": [
+        {
+          "tag": "HAND→AGENT",
+          "body": "Tiny DDPM on MNIST; switch the U-Net target from $\\epsilon$ to $x_0$ and see blurry samples (Table 2)."
+        },
+        {
+          "tag": "HAND→AGENT",
+          "body": "Set the Langevin noise $z = 0$ at every reverse step and watch deterministic sampling fail under the DDPM formulation."
+        }
+      ],
+      "note": ""
+    },
+    {
+      "n": 10,
+      "module": 4,
+      "slug": "lora",
+      "short": "LoRA",
+      "year": "2021",
+      "title": "LoRA: Low-Rank Adaptation of Large Language Models",
+      "paper": [
+        {
+          "label": "Paper",
+          "url": "https://arxiv.org/abs/2106.09685"
+        },
+        {
+          "label": "PDF",
+          "url": "https://arxiv.org/pdf/2106.09685.pdf"
+        }
+      ],
+      "videos": [
+        {
+          "title": "Umar Jamil LoRA Math & Code",
+          "id": "PXWYUTMt-AU"
+        },
+        {
+          "title": "AI Coffee Break LoRA Ablations",
+          "id": "KEv-F5UkhxU"
+        }
+      ],
+      "resources": [],
+      "approach": "Intrinsic rank (Li et al. 2018). Section 4: freeze $W_0$, inject $\\Delta W = (\\alpha/r)BA$, $B = 0$ and $A \\sim \\mathcal{N}(0, \\sigma^2)$; Tables 5–6: adapting $W_q$ and $W_v$ at r=4 beats $W_q$ alone at r=64.",
+      "hooks": "**Rapid-fire:** which layers to adapt (q, v vs all linear); when LoRA loses to full fine-tuning; [QLoRA](https://arxiv.org/abs/2305.14314) (NF4 base + bf16 adapters, double quantization); adapters, prefix tuning, IA³. SVD from Phase 1 is the math.",
+      "experiments": [
+        {
+          "tag": "HAND",
+          "body": "15-line `nn.Linear` wrapper. Init both A and B to zero (gradients identically zero, a saddle) or both Gaussian (ΔW ≠ 0 at step 0, corrupting the base)."
+        },
+        {
+          "tag": "HAND→AGENT",
+          "body": "Rank sweep r ∈ {1, 4, 64}; plot singular values of ΔW."
+        }
+      ],
+      "note": ""
+    },
+    {
+      "n": 11,
+      "module": 4,
+      "slug": "instructgpt",
+      "short": "InstructGPT",
+      "year": "2022",
+      "title": "Training language models to follow instructions with human feedback",
+      "paper": [
+        {
+          "label": "Paper",
+          "url": "https://arxiv.org/abs/2203.02155"
+        },
+        {
+          "label": "PDF",
+          "url": "https://arxiv.org/pdf/2203.02155.pdf"
+        }
+      ],
+      "videos": [
+        {
+          "title": "Stanford CS224N: RLHF Lecture",
+          "id": "SXpJ9EmG3s4"
+        },
+        {
+          "title": "Umar Jamil RLHF Math & Code",
+          "id": "qGyFrqc34yc"
+        }
+      ],
+      "resources": [
+        {
+          "label": "CS336 L15",
+          "url": "https://github.com/stanford-cs336/spring2025-lectures/blob/61eddac004df975466cff0329b615f2d24230069/nonexecutable/2025%20Lecture%2015%20-%20RLHF%20Alignment.pdf"
+        },
+        {
+          "label": "Nathan Lambert's RLHF Book",
+          "url": "https://rlhfbook.com/"
+        }
+      ],
+      "approach": "The SFT → reward model → PPO-ptx pipeline. Bradley–Terry loss $-\\log\\sigma(r(x, y_w) - r(x, y_l))$; the per-token KL penalty $\\beta \\log(\\pi_{RL}/\\pi_{SFT})$ as the anti-reward-hacking term.",
+      "hooks": "**Rapid-fire:** why SFT masks loss on prompt tokens; a 1.3B aligned model is preferred over 175B unaligned.",
+      "experiments": [
+        {
+          "tag": "AGENT",
+          "body": "Build the toy RLHF loop (GPT-2 policy, DistilBERT sentiment reward, TRL)."
+        },
+        {
+          "tag": "HAND",
+          "body": "Set β = 0 and watch the policy degenerate into \"excellent! best! 10/10!\" — Goodhart's law live."
+        }
+      ],
+      "note": ""
+    },
+    {
+      "n": 12,
+      "module": 4,
+      "slug": "chinchilla",
+      "short": "Chinchilla",
+      "year": "2022",
+      "title": "Training Compute-Optimal Large Language Models",
+      "paper": [
+        {
+          "label": "Paper",
+          "url": "https://arxiv.org/abs/2203.15556"
+        },
+        {
+          "label": "PDF",
+          "url": "https://arxiv.org/pdf/2203.15556.pdf"
+        }
+      ],
+      "videos": [
+        {
+          "title": "Chinchilla Scaling Laws Explained",
+          "id": "PZXN7jm9IC0"
+        }
+      ],
+      "resources": [
+        {
+          "label": "CS336 L9",
+          "url": "https://github.com/stanford-cs336/spring2025-lectures/blob/fb79eb018fa047bf99c4c785dcbbd62fff361e54/nonexecutable/2025%20Lecture%209%20-%20Scaling%20laws%20basics.pdf"
+        },
+        {
+          "label": "CS336 L11",
+          "url": "https://github.com/stanford-cs336/spring2025-lectures/blob/00191bba00d6d64621dc46ccaed9122681413a24/nonexecutable/2025%20Lecture%2011%20-%20Scaling%20details.pdf"
+        },
+        {
+          "label": "CS336 A3",
+          "url": "https://github.com/stanford-cs336/assignment3-scaling"
+        }
+      ],
+      "approach": "[Kaplan et al. (2020)](https://arxiv.org/abs/2001.08361) vs Hoffmann: three IsoFLOP methods, $L(N, D) = E + A/N^\\alpha + B/D^\\beta$, FLOPs ≈ 6ND, ~20 tokens/parameter.",
+      "hooks": "The equation every candidate must know cold: $N^* \\propto C^{0.5}$, $D^* \\propto C^{0.5}$. Also: why tokenizer efficiency shifts the frontier; the emergent-abilities debate (real phase transitions vs metric artifacts).",
+      "experiments": [
+        {
+          "tag": "HAND",
+          "body": "NumPy script for $L(N, D) = 1.69 + 406.4/N^{0.34} + 410.7/D^{0.28}$ under $C = 6ND$; plot loss vs N per FLOP budget."
+        },
+        {
+          "tag": "HAND→AGENT",
+          "body": "Train a tiny Transformer 2,000 steps with `CosineAnnealingLR(T_max=10000)` vs `T_max=2000` and see why Kaplan was fooled by not decaying to zero."
+        }
+      ],
+      "note": ""
+    },
+    {
+      "n": 13,
+      "module": 4,
+      "slug": "dpo",
+      "short": "DPO",
+      "year": "2023",
+      "title": "Direct Preference Optimization: Your Language Model is Secretly a Reward Model",
+      "paper": [
+        {
+          "label": "Paper",
+          "url": "https://arxiv.org/abs/2305.18290"
+        },
+        {
+          "label": "PDF",
+          "url": "https://arxiv.org/pdf/2305.18290.pdf"
+        }
+      ],
+      "videos": [
+        {
+          "title": "Umar Jamil DPO Derivation & Code",
+          "id": "hvGa5Mba4c8"
+        }
+      ],
+      "resources": [
+        {
+          "label": "CS336 A5 optional part 2",
+          "url": "https://github.com/stanford-cs336/assignment5-alignment"
+        }
+      ],
+      "approach": "Derive Section 4 on paper: solve the KL-constrained reward maximization for $r(x, y) = \\beta \\log(\\pi_\\theta/\\pi_{ref}) + \\beta \\log Z(x)$, plug into Bradley–Terry, watch $Z(x)$ cancel. Any LM is implicitly a reward model; RLHF becomes stable binary cross-entropy with no critic and no online sampling.",
+      "hooks": "",
+      "experiments": [
+        {
+          "tag": "HAND",
+          "body": "The 6-line loss (Phase 2 row 14)."
+        },
+        {
+          "tag": "HAND",
+          "body": "Remove `ref_logps` (naive unlikelihood training) or set β = 0.001 vs 5.0; probability mass collapses onto degenerate tokens."
+        }
+      ],
+      "note": ""
+    },
+    {
+      "n": 14,
+      "module": 4,
+      "slug": "mamba",
+      "short": "Mamba",
+      "year": "2023",
+      "title": "Mamba: Linear-Time Sequence Modeling with Selective State Spaces",
+      "paper": [
+        {
+          "label": "Paper",
+          "url": "https://arxiv.org/abs/2312.00752"
+        },
+        {
+          "label": "PDF",
+          "url": "https://arxiv.org/pdf/2312.00752.pdf"
+        }
+      ],
+      "videos": [
+        {
+          "title": "Mamba Author Talk (COLM Oral)",
+          "id": "X-7rgesJaGM"
+        },
+        {
+          "title": "Umar Jamil Mamba & S4 Math",
+          "id": "8Q_tqwpTpVU"
+        }
+      ],
+      "resources": [],
+      "approach": "Continuous SSM → zero-order-hold discretization → why LTI models (S4) fail selective copying and induction heads. Input-dependent $B, C, \\Delta$ break the convolution, requiring a parallel associative scan (Blelloch 1990). $O(N)$ with Transformer-quality modeling.",
+      "hooks": "",
+      "experiments": [
+        {
+          "tag": "HAND→AGENT",
+          "body": "Synthetic selective-copying dataset; static LTI recurrence vs selective ($B_t = W_B x_t$); LTI fails to filter variable-spaced noise."
+        },
+        {
+          "tag": "HAND",
+          "body": "Blelloch prefix-sum scan in PyTorch, $O(N)$ sequential → $O(\\log N)$ parallel."
+        }
+      ],
+      "note": ""
+    },
+    {
+      "n": 15,
+      "module": 5,
+      "slug": "chain-of-thought",
+      "short": "Chain-of-Thought",
+      "year": "2022",
+      "title": "Chain-of-Thought Prompting Elicits Reasoning in Large Language Models",
+      "paper": [
+        {
+          "label": "Paper",
+          "url": "https://arxiv.org/abs/2201.11903"
+        },
+        {
+          "label": "PDF",
+          "url": "https://arxiv.org/pdf/2201.11903.pdf"
+        }
+      ],
+      "videos": [
+        {
+          "title": "Stanford CS25: Jason Wei on CoT",
+          "id": "3gb-ZkVRemQ"
+        },
+        {
+          "title": "CMU CS 11-768: Tool & Code Agents",
+          "id": "jXChFB4JSyw"
+        }
+      ],
+      "resources": [
+        {
+          "label": "CS336 L12 (evaluation)",
+          "url": "http://cs336.stanford.edu/spring2025-lectures/?trace=var/traces/lecture_12.json"
+        }
+      ],
+      "approach": "Why few-shot prompting has a flat scaling curve on GSM8K. CoT as adaptive test-time compute via an externalized scratchpad (Nye et al. 2021). Emergent at scale when intermediate states are materialized as tokens.",
+      "hooks": "",
+      "experiments": [
+        {
+          "tag": "AGENT",
+          "body": "Harness that force-decodes a wrong intermediate step (\"14 × 3 = 99\") on GSM8K and measures whether the model self-corrects."
+        },
+        {
+          "tag": "HAND→AGENT",
+          "body": "Self-consistency, K=10 samples at T=0.7 with majority vote; expect +10–15% over greedy."
+        }
+      ],
+      "note": ""
+    },
+    {
+      "n": 16,
+      "module": 6,
+      "slug": "llama",
+      "short": "LLaMA and Llama 3",
+      "year": "2023, 2024",
+      "title": "LLaMA (2023) and Llama 3 (2024)",
+      "paper": [
+        {
+          "label": "LLaMA paper",
+          "url": "https://arxiv.org/abs/2302.13971"
+        },
+        {
+          "label": "LLaMA PDF",
+          "url": "https://arxiv.org/pdf/2302.13971.pdf"
+        },
+        {
+          "label": "Llama 3 paper",
+          "url": "https://arxiv.org/abs/2407.21783"
+        }
+      ],
+      "videos": [
+        {
+          "title": "Umar Jamil LLaMA Math Breakdown",
+          "id": "Mn_9W1nCFLo"
+        },
+        {
+          "title": "Coding LLaMA 2 From Scratch",
+          "id": "oM4VmoabDAI"
+        }
+      ],
+      "resources": [
+        {
+          "label": "GQA paper",
+          "url": "https://arxiv.org/abs/2305.13245"
+        },
+        {
+          "label": "Scaling book ch. 6",
+          "url": "https://jax-ml.github.io/scaling-book/applied-training"
+        },
+        {
+          "label": "Scaling book ch. 8",
+          "url": "https://jax-ml.github.io/scaling-book/applied-inference"
+        }
+      ],
+      "approach": "Contrast every block with #4: pre-RMSNorm, SwiGLU, RoPE (relative position via 2D complex rotation), GQA. Inference-optimal models over-train small architectures on 15T+ tokens and shrink the KV cache via GQA.",
+      "hooks": "**Rapid-fire:** KV cache size = 2 × n_layers × seq_len × d_model × bytes (a 70B model at 128K tokens in bf16 needs ~200 GB); GQA reduces it by n_heads/n_kv_heads.",
+      "experiments": [
+        {
+          "tag": "HAND",
+          "body": "RoPE in 15 lines via `torch.polar`; verify $\\langle \\mathrm{RoPE}(q, m), \\mathrm{RoPE}(k, n) \\rangle$ depends only on $m - n$; then exceed `max_seq_len` without frequency scaling."
+        },
+        {
+          "tag": "HAND→AGENT",
+          "body": "Profile VRAM with $H_{kv} = 32$ vs 4."
+        }
+      ],
+      "note": ""
+    },
+    {
+      "n": 17,
+      "module": 6,
+      "slug": "flashattention",
+      "short": "FlashAttention",
+      "year": "2022, 2023",
+      "title": "FlashAttention (2022) and FlashAttention-2 (2023)",
+      "paper": [
+        {
+          "label": "FlashAttention paper",
+          "url": "https://arxiv.org/abs/2205.14135"
+        },
+        {
+          "label": "FlashAttention PDF",
+          "url": "https://arxiv.org/pdf/2205.14135.pdf"
+        },
+        {
+          "label": "FlashAttention-2 paper",
+          "url": "https://arxiv.org/abs/2307.08691"
+        }
+      ],
+      "videos": [
+        {
+          "title": "Tri Dao: Optimizing Attention",
+          "id": "cPwt1Y10gjI"
+        },
+        {
+          "title": "FlashAttention in Triton From Scratch",
+          "id": "zy8ChVd_oTM"
+        }
+      ],
+      "resources": [
+        {
+          "label": "CS336 L5",
+          "url": "https://github.com/stanford-cs336/spring2025-lectures/blob/main/nonexecutable/2025%20Lecture%205%20-%20GPUs.pdf"
+        },
+        {
+          "label": "CS336 L6",
+          "url": "http://cs336.stanford.edu/spring2025-lectures/?trace=var/traces/lecture_06.json"
+        },
+        {
+          "label": "CS336 A2",
+          "url": "https://github.com/stanford-cs336/assignment2-systems"
+        },
+        {
+          "label": "Scaling book ch. 1 (rooflines)",
+          "url": "https://jax-ml.github.io/scaling-book/roofline"
+        }
+      ],
+      "approach": "Memory-bound vs compute-bound (arithmetic intensity). Standard attention writes an $O(N^2)$ matrix to HBM; Section 3's tiling and online softmax (running max $m$, running sum $\\ell$) keep it exact and in SRAM.",
+      "hooks": "**Rapid-fire:** \"Flash Attention doesn't change the math, so why is it 5–10x faster?\"",
+      "experiments": [
+        {
+          "tag": "HAND",
+          "body": "Tiled online softmax over a 10,000-vector in chunks of 100, `allclose` vs `F.softmax`."
+        },
+        {
+          "tag": "HAND→AGENT",
+          "body": "Naive `Q @ K.T` at N=16,384 (CUDA OOM) vs `F.scaled_dot_product_attention`."
+        },
+        {
+          "tag": "AGENT",
+          "body": "The Triton FlashAttention-2 kernel from CS336 A2 — you must be able to explain every tile boundary, not write it blind."
+        }
+      ],
+      "note": ""
+    },
+    {
+      "n": 18,
+      "module": 6,
+      "slug": "mixture-of-experts",
+      "short": "Switch Transformers and DeepSeek-V3",
+      "year": "2021, 2024",
+      "title": "Switch Transformers (2021) and DeepSeek-V3 (2024)",
+      "paper": [
+        {
+          "label": "Switch paper",
+          "url": "https://arxiv.org/abs/2101.03961"
+        },
+        {
+          "label": "Switch PDF",
+          "url": "https://arxiv.org/pdf/2101.03961.pdf"
+        },
+        {
+          "label": "DeepSeek-V3 paper",
+          "url": "https://arxiv.org/abs/2412.19437"
+        },
+        {
+          "label": "DeepSeek-V3 PDF",
+          "url": "https://arxiv.org/pdf/2412.19437.pdf"
+        }
+      ],
+      "videos": [
+        {
+          "title": "Yannic Kilcher Switch Transformers",
+          "id": "5n2bc30059Q"
+        },
+        {
+          "title": "Mixtral MoE & Sliding Window",
+          "id": "UiX8K-xBUpE"
+        }
+      ],
+      "resources": [
+        {
+          "label": "CS336 L4",
+          "url": "https://github.com/stanford-cs336/spring2025-lectures/blob/98455ec198c9a88ec1ab2b1c4058662431b54ce3/nonexecutable/2025%20Lecture%204%20-%20MoEs.pdf"
+        }
+      ],
+      "approach": "Replacing the dense FFN with E experts + a top-k router decouples parameters (capacity) from FLOPs per token. Routing collapse and its fixes: load-balancing auxiliary loss vs DeepSeek-V3's auxiliary-loss-free bias adjustment. Conditional compute is how 600B+ models serve fast.",
+      "hooks": "",
+      "experiments": [
+        {
+          "tag": "HAND",
+          "body": "Mini MoE with 8 experts and a top-2 softmax router, no balancing loss; histogram of expert utilization over 500 steps shows 1–2 experts taking >95% and the rest dying."
+        },
+        {
+          "tag": "HAND→AGENT",
+          "body": "Add the aux loss, then the bias trick, re-plot."
+        }
+      ],
+      "note": ""
+    },
+    {
+      "n": 19,
+      "module": 7,
+      "slug": "deepseek-r1-grpo",
+      "short": "DeepSeekMath and DeepSeek-R1",
+      "year": "2024, 2025",
+      "title": "DeepSeekMath (2024, GRPO) and DeepSeek-R1 (2025)",
+      "paper": [
+        {
+          "label": "DeepSeekMath paper",
+          "url": "https://arxiv.org/abs/2402.03300"
+        },
+        {
+          "label": "DeepSeek-R1 paper",
+          "url": "https://arxiv.org/abs/2501.12948"
+        },
+        {
+          "label": "DeepSeek-R1 PDF",
+          "url": "https://arxiv.org/pdf/2501.12948.pdf"
+        }
+      ],
+      "videos": [
+        {
+          "title": "Yannic Kilcher: GRPO & DeepSeekMath",
+          "id": "bAWV_yrqx4w"
+        },
+        {
+          "title": "Coding GRPO From Scratch in PyTorch",
+          "id": "FRledQUbKyU"
+        }
+      ],
+      "resources": [
+        {
+          "label": "Murali's Lightweight Guide to GRPO (no RL prerequisite)",
+          "url": "https://gitlostmurali.com/blog/grpo-intro"
+        },
+        {
+          "label": "Ivison's policy-gradient notes (goes as far as CISPO)",
+          "url": "https://ivison.id.au/2026/02/09/policy-gradient.html"
+        },
+        {
+          "label": "CS336 L16",
+          "url": "https://github.com/stanford-cs336/spring2025-lectures/blob/e94e33f433985e57036b25215dff2a4292e67a4f/nonexecutable/2025%20Lecture%2016%20-%20RLVR.pdf"
+        },
+        {
+          "label": "CS336 L17",
+          "url": "http://cs336.stanford.edu/spring2025-lectures/?trace=var/traces/lecture_17.json"
+        },
+        {
+          "label": "CS336 A5",
+          "url": "https://github.com/stanford-cs336/assignment5-alignment"
+        }
+      ],
+      "approach": "Connect #8 PPO + #15 CoT. GRPO drops the critic: sample G completions per prompt, $\\hat{A}_i = (r_i - \\mathrm{mean}(r))/\\mathrm{std}(r)$, importance ratio with stop-gradient on old log-probs, clip at ε.",
+      "hooks": "Know the neighbors: RLOO (leave-one-out), REINFORCE++, VinePPO, CISPO; why most 2025 implementations set the KL coefficient β = 0 (clipping already bounds the step); on- vs off-policy trade-off; the \"forking tokens\" result.",
+      "experiments": [
+        {
+          "tag": "AGENT",
+          "body": "Build the mini-GRPO loop (TRL or Unsloth) on Qwen2.5-1.5B with GSM8K or Countdown and a rule-based reward (+1 format, +2 correct)."
+        },
+        {
+          "tag": "HAND",
+          "body": "The loss itself (Phase 2 row 15)."
+        },
+        {
+          "tag": "HAND→AGENT",
+          "body": "G = 8 → 2, advantages become too noisy; plot `<think>` length growing over steps."
+        }
+      ],
+      "note": ""
+    },
+    {
+      "n": 20,
+      "module": 8,
+      "slug": "diffusion-transformers",
+      "short": "DiT",
+      "year": "2023",
+      "title": "Scalable Diffusion Models with Transformers",
+      "paper": [
+        {
+          "label": "Paper",
+          "url": "https://arxiv.org/abs/2212.09748"
+        },
+        {
+          "label": "PDF",
+          "url": "https://arxiv.org/pdf/2212.09748.pdf"
+        }
+      ],
+      "videos": [
+        {
+          "title": "DiT Explanation & PyTorch Code",
+          "id": "aSLDXdc2hkk"
+        },
+        {
+          "title": "Stanford CS25: Transformers in Diffusion",
+          "id": "L45iAba2DAw"
+        }
+      ],
+      "resources": [],
+      "approach": "#5 ViT + #9 DDPM. Patchify latents into tokens; adaLN-Zero injects t and class c by predicting $(\\gamma, \\beta, \\alpha)$ with the final linear layer zero-initialized so each block starts as identity. More GFLOPs → lower FID.",
+      "hooks": "",
+      "experiments": [
+        {
+          "tag": "HAND",
+          "body": "One DiT block with the conditioning MLP; zero-init its final linear vs Xavier and watch early convergence speed (the ResNet zero-γ trick again)."
+        },
+        {
+          "tag": "AGENT",
+          "body": "The full latent-diffusion training scaffold."
+        }
+      ],
+      "note": ""
+    },
+    {
+      "n": 21,
+      "module": 8,
+      "slug": "flow-matching",
+      "short": "Flow Matching",
+      "year": "2023",
+      "title": "Flow Matching for Generative Modeling",
+      "paper": [
+        {
+          "label": "Paper",
+          "url": "https://arxiv.org/abs/2210.02747"
+        },
+        {
+          "label": "PDF",
+          "url": "https://arxiv.org/pdf/2210.02747.pdf"
+        }
+      ],
+      "videos": [
+        {
+          "title": "Yannic Kilcher Flow Matching",
+          "id": "7NNxK3CqaDk"
+        },
+        {
+          "title": "MIT 6.S184: Flow Matching & Diffusion",
+          "id": "firXjwZ_6KI"
+        }
+      ],
+      "resources": [],
+      "approach": "Contrast with #9. Straight-line interpolation $x_t = (1-t)x_0 + t x_1$, train $v_\\theta(x_t, t) \\approx x_1 - x_0$, sample with an ODE solver. Straight optimal-transport paths give good samples in 10–20 Euler steps instead of 1,000.",
+      "hooks": "",
+      "experiments": [
+        {
+          "tag": "HAND",
+          "body": "50-line 2D flow matching on Two Moons / Swiss Roll, 3-layer MLP, Euler loop with N=5 steps vs DDPM at N=5; plot trajectories."
+        }
+      ],
+      "note": ""
+    }
+  ],
+  "execution": {
+    "intro": "Each paper takes three days; the remaining two weekdays go to CS336 assignments and the portfolio. This keeps your original Day 1–3 loop and adds Alisa's two habits: explain it aloud, and keep running notes.",
+    "steps": [
+      {
+        "day": "Day 1",
+        "title": "Read and question",
+        "tag": "HAND",
+        "body": "Read the paper's methodology, equations and ablation tables, not the intro. Write three questions you cannot yet answer."
+      },
+      {
+        "day": "Day 2",
+        "title": "Derive and watch",
+        "tag": "HAND",
+        "body": "Watch the paired walkthrough, then write the core derivation by hand (the √d_k variance argument, the DPO cancellation, the GRPO advantage). Add the result to your running LLM notebook."
+      },
+      {
+        "day": "Day 3",
+        "title": "Break it",
+        "tag": "HAND→AGENT",
+        "body": "Run the experiment: you write the one change that breaks the equation; a coding agent builds the harness, data loader and plots. Save the plot and a two-line conclusion."
+      },
+      {
+        "day": "Then",
+        "title": "Explain it aloud",
+        "tag": "",
+        "body": "Ten minutes with an LLM as examiner, no notes. If you cannot explain it simply, you do not know it yet; repeat Day 2."
+      },
+      {
+        "day": "Weekend",
+        "title": "Drills and review",
+        "tag": "",
+        "body": "One full timed drill rotation from Phase 2 (AI off) and the week's LeetCode review."
+      }
+    ],
+    "sources": "your 21-paper roadmap PDF · [alisa-roadmap README, The Study System That Works](https://github.com/soasme/alisa-roadmap) · [Notes on the Industry Job Search](https://alisawuffles.github.io/blog/job-search/)"
+  },
+  "timeline": {
+    "title": "Twenty-six weeks: breadth first, then papers and drills, then interview prep",
+    "caption": "Bands are weeks; diamonds are gates you must pass before moving on",
+    "weeks": 26,
+    "lanes": [
+      {
+        "name": "Breadth and math",
+        "bands": [
+          {
+            "label": "CS336",
+            "from": 1,
+            "to": 2,
+            "phase": "p0"
+          },
+          {
+            "label": "Math",
+            "from": 3,
+            "to": 4,
+            "phase": "p1"
+          }
+        ]
+      },
+      {
+        "name": "Papers (Phase 3)",
+        "key": true,
+        "bands": [
+          {
+            "label": "M1",
+            "from": 3,
+            "to": 4,
+            "modules": [
+              1
+            ]
+          },
+          {
+            "label": "M2 (4–6)",
+            "from": 5,
+            "to": 8,
+            "modules": [
+              2
+            ]
+          },
+          {
+            "label": "M3 (7–9)",
+            "from": 9,
+            "to": 11,
+            "modules": [
+              3
+            ]
+          },
+          {
+            "label": "M4 (10–14)",
+            "from": 12,
+            "to": 16,
+            "modules": [
+              4
+            ]
+          },
+          {
+            "label": "M5+6",
+            "from": 17,
+            "to": 19,
+            "modules": [
+              5,
+              6
+            ]
+          },
+          {
+            "label": "M7+8",
+            "from": 20,
+            "to": 21,
+            "modules": [
+              7,
+              8
+            ]
+          }
+        ]
+      },
+      {
+        "name": "CS336 assignments",
+        "bands": [
+          {
+            "label": "A1 Basics",
+            "from": 3,
+            "to": 6,
+            "assign": [
+              "A1"
+            ]
+          },
+          {
+            "label": "A5 RL",
+            "from": 14,
+            "to": 16,
+            "assign": [
+              "A5"
+            ]
+          },
+          {
+            "label": "A2 Sys",
+            "from": 17,
+            "to": 19,
+            "assign": [
+              "A2"
+            ]
+          },
+          {
+            "label": "A3+A4",
+            "from": 21,
+            "to": 22,
+            "assign": [
+              "A3",
+              "A4"
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Drills + LeetCode",
+        "bands": [
+          {
+            "label": "Weekly timed drills, daily LeetCode, all with AI off",
+            "from": 3,
+            "to": 26
+          }
+        ]
+      },
+      {
+        "name": "Portfolio + prep",
+        "bands": [
+          {
+            "label": "Three portfolio repos",
+            "from": 12,
+            "to": 22
+          },
+          {
+            "label": "Prep",
+            "from": 23,
+            "to": 24
+          },
+          {
+            "label": "Mocks",
+            "from": 25,
+            "to": 26
+          }
+        ]
+      },
+      {
+        "name": "Networking",
+        "muted": true,
+        "bands": [
+          {
+            "label": "Conferences, collaborators and referrals, built months before you apply",
+            "from": 1,
+            "to": 26
+          }
+        ]
+      }
+    ],
+    "gates": [
+      {
+        "id": "G1",
+        "label": "Decoder block in 30 min, AI off",
+        "week": 9
+      },
+      {
+        "id": "G2",
+        "label": "3 repos started",
+        "week": 17
+      },
+      {
+        "id": "G3",
+        "label": "Drills on target",
+        "week": 22
+      },
+      {
+        "id": "G4",
+        "label": "First applications",
+        "week": 26
+      }
+    ],
+    "after": "The Papers lane is the spine; the gates are pass/fail checkpoints — if a gate fails, extend that band by a week rather than skipping ahead. Networking runs the full length because referrals take months to build."
+  },
+  "resources": {
+    "intro": "Paper links are inline in Phase 3, and the YouTube walkthroughs named there are embedded with each paper (links from the original 21-paper roadmap).",
+    "rows": [
+      {
+        "links": [
+          {
+            "label": "alisa-roadmap (GitHub)",
+            "url": "https://github.com/soasme/alisa-roadmap"
+          }
+        ],
+        "use": "The knowledge map this plan merges; interview-type breakdown; rapid-fire questions",
+        "phase": "All"
+      },
+      {
+        "links": [
+          {
+            "label": "Notes on the Industry Job Search — Alisa Liu",
+            "url": "https://alisawuffles.github.io/blog/job-search/"
+          }
+        ],
+        "use": "Primary source: timeline, interview types, preparation, negotiation",
+        "phase": "All"
+      },
+      {
+        "links": [
+          {
+            "label": "Alisa's Book of LLMs (Notion)",
+            "url": "https://alisawuffles.notion.site/alisa-s-book-of-llms"
+          }
+        ],
+        "use": "Model for your own running LLM notes",
+        "phase": "0, 3, 4"
+      },
+      {
+        "links": [
+          {
+            "label": "Alisa's math notes (Notion)",
+            "url": "https://alisawuffles.notion.site/math-notes"
+          }
+        ],
+        "use": "Model for your math-interview notes",
+        "phase": "1"
+      },
+      {
+        "links": [
+          {
+            "label": "Stanford CS336: Language Modeling from Scratch",
+            "url": "https://cs336.stanford.edu/spring2025/"
+          },
+          {
+            "label": "YouTube",
+            "url": "https://www.youtube.com/playlist?list=PLoROMvodv4rOY23Y0BoGoBGgQ1zmU_MT_"
+          }
+        ],
+        "use": "The breadth skeleton; 17 lectures",
+        "phase": "0"
+      },
+      {
+        "links": [
+          {
+            "label": "CS336 A1 Basics",
+            "url": "https://github.com/stanford-cs336/assignment1-basics"
+          },
+          {
+            "label": "A2 Systems",
+            "url": "https://github.com/stanford-cs336/assignment2-systems"
+          },
+          {
+            "label": "A3 Scaling",
+            "url": "https://github.com/stanford-cs336/assignment3-scaling"
+          },
+          {
+            "label": "A4 Data",
+            "url": "https://github.com/stanford-cs336/assignment4-data"
+          },
+          {
+            "label": "A5 Alignment",
+            "url": "https://github.com/stanford-cs336/assignment5-alignment"
+          }
+        ],
+        "use": "The implementation track",
+        "phase": "0, 2, 3, 4"
+      },
+      {
+        "links": [
+          {
+            "label": "CS224N: Self-Attention and Transformers notes",
+            "url": "https://web.stanford.edu/class/cs224n/readings/cs224n-self-attention-transformers-2023_draft.pdf"
+          }
+        ],
+        "use": "Read before the attention drills",
+        "phase": "2"
+      },
+      {
+        "links": [
+          {
+            "label": "The Illustrated GPT-2 — Jay Alammar",
+            "url": "https://jalammar.github.io/illustrated-gpt2/"
+          }
+        ],
+        "use": "Visual walkthrough before implementing",
+        "phase": "2"
+      },
+      {
+        "links": [
+          {
+            "label": "CS231n: Backpropagation",
+            "url": "https://cs231n.github.io/optimization-2/"
+          }
+        ],
+        "use": "The NumPy backward pass",
+        "phase": "1, 2"
+      },
+      {
+        "links": [
+          {
+            "label": "Introduction to Policy Gradient for LMs — Hamish Ivison",
+            "url": "https://ivison.id.au/2026/02/09/policy-gradient.html"
+          }
+        ],
+        "use": "REINFORCE → baselines → importance weighting → GRPO/CISPO, in LM notation",
+        "phase": "1, 3"
+      },
+      {
+        "links": [
+          {
+            "label": "Lightweight Guide to GRPO — Murali Manohar",
+            "url": "https://gitlostmurali.com/blog/grpo-intro"
+          }
+        ],
+        "use": "GRPO with no RL prerequisite; clipping, off-policy, KL = 0",
+        "phase": "3"
+      },
+      {
+        "links": [
+          {
+            "label": "Policy Gradient Algorithms — Lilian Weng",
+            "url": "https://lilianweng.github.io/posts/2018-04-08-policy-gradient/"
+          }
+        ],
+        "use": "Reference survey for the RL papers",
+        "phase": "1, 3"
+      },
+      {
+        "links": [
+          {
+            "label": "RLHF Book — Nathan Lambert",
+            "url": "https://rlhfbook.com/"
+          }
+        ],
+        "use": "Post-training end to end",
+        "phase": "3"
+      },
+      {
+        "links": [
+          {
+            "label": "How to Scale Your Model — Austin et al.",
+            "url": "https://jax-ml.github.io/scaling-book/"
+          }
+        ],
+        "use": "Rooflines, Transformer math, parallelism, inference",
+        "phase": "4"
+      },
+      {
+        "links": [
+          {
+            "label": "ML Interviews Book — Chip Huyen",
+            "url": "https://huyenchip.com/ml-interviews-book/"
+          }
+        ],
+        "use": "Gap-finding across classic ML",
+        "phase": "1, 6"
+      },
+      {
+        "links": [
+          {
+            "label": "build-nanogpt",
+            "url": "https://github.com/karpathy/build-nanogpt"
+          },
+          {
+            "label": "minbpe",
+            "url": "https://github.com/karpathy/minbpe"
+          },
+          {
+            "label": "Zero to Hero playlist — Karpathy",
+            "url": "https://www.youtube.com/playlist?list=PLAqhIrjkxbuWI23v9cThsA9GvCAUhRvKZ"
+          }
+        ],
+        "use": "Reference implementations for GPT-2 and BPE",
+        "phase": "2, 3"
+      },
+      {
+        "links": [
+          {
+            "label": "CleanRL",
+            "url": "https://github.com/vwxyzjn/cleanrl"
+          }
+        ],
+        "use": "Single-file PPO for the break-it experiment",
+        "phase": "3"
+      },
+      {
+        "links": [
+          {
+            "label": "LeetCode 75",
+            "url": "https://leetcode.com/studyplan/leetcode-75/"
+          },
+          {
+            "label": "NeetCode Blind 75",
+            "url": "https://neetcode.io/practice/practice/blind75"
+          }
+        ],
+        "use": "Daily coding",
+        "phase": "5"
+      },
+      {
+        "links": [
+          {
+            "label": "RunPod",
+            "url": "https://runpod.io/pricing"
+          },
+          {
+            "label": "Lambda",
+            "url": "https://lambda.ai/pricing"
+          }
+        ],
+        "use": "~$2–3/hr H100 for self-study runs",
+        "phase": "0, 3"
+      },
+      {
+        "links": [
+          {
+            "label": "Nathan Lambert: AI PhD job hunt",
+            "url": "https://natolambert.com/writing/ai-phd-job-hunt"
+          }
+        ],
+        "use": "Second data point on timelines",
+        "phase": "7"
+      }
+    ]
+  }
+}

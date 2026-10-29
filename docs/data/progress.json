@@ -1,0 +1,18 @@
+{
+  "updated": "2026-10-29",
+  "startDate": "",
+  "papers": {
+    "1": {
+      "read": true,
+      "derive": true,
+      "lab": true,
+      "experiments": [true, true],
+      "started": "",
+      "finished": "",
+      "notes": "Done in my notebook before the tracker existed."
+    }
+  },
+  "checks": {},
+  "streaks": {},
+  "counts": {}
+}

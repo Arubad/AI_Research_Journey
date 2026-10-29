@@ -1,0 +1,17 @@
+# Core stack for the break-it labs (Papers 1–21)
+torch
+torchvision
+numpy
+matplotlib
+jupyter
+tqdm
+
+# Papers 7–8 (DQN, PPO)
+gymnasium[box2d]
+
+# Papers 6, 10, 11, 13, 15, 19 (open LLMs, LoRA, RLHF, DPO, CoT, GRPO)
+transformers
+datasets
+peft
+trl
+accelerate

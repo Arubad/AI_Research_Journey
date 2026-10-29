@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+.ipynb_checkpoints/
+
+# Data and model weights stay out of git (root-level data dirs only;
+# docs/data/ and phase-4-systems/data/ are tracked)
+/data/
+/datasets/
+**/experiments/data/
+checkpoints/
+*.pt
+*.pth
+*.ckpt
+*.safetensors
+wandb/
+runs/
+lightning_logs/
+
+# OS / editor
+.DS_Store
+.vscode/
+.idea/
+
+# Personal job-search notes never go public
+phase-7-job-search/private/*
+!phase-7-job-search/private/.gitkeep
